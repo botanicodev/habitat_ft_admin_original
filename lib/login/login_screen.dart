@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
         ),
         SizedBox(height: 20),
         Text(
-          'Inicio de Sesión',
+          'Inicio de sesión',
           style: GoogleFonts.spartan(
             color: ColorCustomer.textGrey,
             fontSize: 16,
@@ -71,7 +71,7 @@ class LoginPage extends StatelessWidget {
   Widget _buildLoginEmail() {
     return Container(
       child: Column(children: [
-        _buildTextFormField('Correo Electrónico', Icons.email),
+        _buildTextFormField('Correo electrónico', Icons.email),
         SizedBox(
           height: 20,
         ),
@@ -115,7 +115,7 @@ class LoginPage extends StatelessWidget {
       ]),
       child: MaterialButton(
         child: Text(
-          'Iniciar Sesión',
+          'Iniciar sesión',
           style: GoogleFonts.spartan(
               color: Colors.white,
               fontSize: 15,
