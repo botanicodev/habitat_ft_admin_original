@@ -38,7 +38,10 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildLogo() {
-    return Container(width: 60, height: 60, child: FlutterLogo());
+    return Image.asset(
+      'assets/icons/habitat_logo.png',
+      width: 60,
+    );
   }
 
   Widget _buildHeader() {
@@ -47,7 +50,7 @@ class LoginPage extends StatelessWidget {
       child: Column(children: [
         Text(
           '¡Bienvenido!',
-          style: GoogleFonts.spartan(
+          style: TextStyle(
             color: ColorCustomer.ligthBlue,
             fontSize: 35,
             fontWeight: FontWeight.w300,
@@ -57,7 +60,7 @@ class LoginPage extends StatelessWidget {
         SizedBox(height: 20),
         Text(
           'Inicio de sesión',
-          style: GoogleFonts.spartan(
+          style: TextStyle(
             color: ColorCustomer.textGrey,
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -87,7 +90,7 @@ class LoginPage extends StatelessWidget {
       contentPadding:
           const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15),
       hintText: text,
-      hintStyle: GoogleFonts.spartan(color: Colors.black38, letterSpacing: -1),
+      hintStyle: TextStyle(color: Colors.black38, letterSpacing: -1),
       isCollapsed: true,
       fillColor: Colors.white,
       filled: true,
@@ -116,7 +119,7 @@ class LoginPage extends StatelessWidget {
       child: MaterialButton(
         child: Text(
           'Iniciar sesión',
-          style: GoogleFonts.spartan(
+          style: TextStyle(
               color: Colors.white,
               fontSize: 15,
               fontWeight: FontWeight.w500,
@@ -166,7 +169,7 @@ class LoginPage extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           Image.asset(
-            'assets/images/google_logo.png',
+            'assets/icons/google_logo.png',
             width: 40,
           ),
           Expanded(
@@ -174,7 +177,7 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 6),
               child: Text(
                 'Continuar con Google',
-                style: GoogleFonts.spartan(
+                style: TextStyle(
                     color: ColorCustomer.blue,
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
