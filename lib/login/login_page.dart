@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatelessWidget {
   @override
