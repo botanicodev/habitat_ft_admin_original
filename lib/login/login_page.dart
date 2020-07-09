@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
+import 'package:get/get.dart';
+import 'package:habitat_ft_admin/workshops/workshops_page.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -129,7 +131,9 @@ class LoginPage extends StatelessWidget {
         minWidth: 600,
         elevation: 0,
         height: 45,
-        onPressed: () {},
+        onPressed: () {
+          Get.to(WorkshopsPage());
+        },
       ),
     );
   }
