@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
 
 class WorkshopsPage extends StatefulWidget {
@@ -47,10 +48,12 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: ColorCustomer.ligthGrey,
       appBar: AppBar(
-        title: Image.asset('assets/icons/habitat_logo_w.png', width: 40),
+        title: Image.asset('assets/icons/habitat_logo_w.png',
+            width: ScreenUtil().setWidth(40)),
         backgroundColor: ColorCustomer.ligthBlue,
         centerTitle: true,
       ),
@@ -268,8 +271,8 @@ class WorkshopItem extends StatelessWidget {
 
   Widget _buildAvatar() {
     return Container(
-      width: 50,
-      height: 50,
+      width: ScreenUtil().setWidth(50),
+      height: ScreenUtil().setWidth(50),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(

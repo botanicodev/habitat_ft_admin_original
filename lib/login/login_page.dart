@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
 import 'package:get/get.dart';
 import 'package:habitat_ft_admin/workshops/workshops_page.dart';
 
 class LoginPage extends StatelessWidget {
+
+
+  const LoginPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+        
     return Scaffold(
       backgroundColor: ColorCustomer.blue,
       body: Center(
         child: Container(
-          width: 400,
-          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          width: ScreenUtil().setWidth(360),
+          padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(30), horizontal: ScreenUtil().setWidth(20)),
           decoration: BoxDecoration(
               color: ColorCustomer.ligthGrey,
               borderRadius: BorderRadius.circular(10),
@@ -29,8 +35,8 @@ class LoginPage extends StatelessWidget {
               _buildHeader(),
               _buildLoginEmail(),
               _buildLoginButton(),
-              _buildDivider(),
-              _buildGoogleButton(),
+              // _buildDivider(),
+              // _buildGoogleButton(),
             ],
           ),
         ),
@@ -41,29 +47,29 @@ class LoginPage extends StatelessWidget {
   Widget _buildLogo() {
     return Image.asset(
       'assets/icons/habitat_logo.png',
-      width: 60,
+      width: ScreenUtil().setWidth(46),
     );
   }
 
   Widget _buildHeader() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 15),
+      margin: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(15)),
       child: Column(children: [
         Text(
           '¡Bienvenido!',
           style: TextStyle(
             color: ColorCustomer.ligthBlue,
-            fontSize: 35,
+            fontSize: ScreenUtil().setSp(35),
             fontWeight: FontWeight.w300,
             letterSpacing: -1,
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: ScreenUtil().setHeight(20)),
         Text(
           'Inicio de sesión',
           style: TextStyle(
             color: ColorCustomer.textGrey,
-            fontSize: 16,
+            fontSize: ScreenUtil().setSp(14),
             fontWeight: FontWeight.w600,
             letterSpacing: -1,
           ),
@@ -77,7 +83,7 @@ class LoginPage extends StatelessWidget {
       child: Column(children: [
         _buildTextFormField('Correo electrónico', Icons.email),
         SizedBox(
-          height: 20,
+          height: ScreenUtil().setWidth(20),
         ),
         _buildTextFormField('Contraseña', Icons.lock),
       ]),
@@ -85,31 +91,37 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildTextFormField(String text, IconData icon) {
-    return TextFormField(
-        decoration: InputDecoration(
-      suffixIcon: Icon(icon, size: 20),
-      contentPadding:
-          const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15),
-      hintText: text,
-      hintStyle: TextStyle(color: Colors.black38, letterSpacing: -1),
-      isCollapsed: true,
-      fillColor: Colors.white,
-      filled: true,
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: ColorCustomer.blue,
-          width: 1.5,
+    return Container(
+      width: ScreenUtil().setWidth(300),
+      height: ScreenUtil().setHeight(40),
+      child: TextFormField(
+          decoration: InputDecoration(
+        suffixIcon: Icon(icon, size: ScreenUtil().setWidth(20)),
+        contentPadding:
+            const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15),
+        hintText: text,
+        hintStyle: TextStyle(color: Colors.black38, letterSpacing: -1, fontSize: ScreenUtil().setSp(12)),
+        isCollapsed: true,
+        fillColor: Colors.white,
+        filled: true,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: ColorCustomer.blue,
+            width: 1.5,
+          ),
         ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.black12, width: 1),
-      ),
-    ));
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black12, width: 1),
+        ),
+      )),
+    );
   }
 
   Widget _buildLoginButton() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
+      width: ScreenUtil().setWidth(300),
+      height: ScreenUtil().setHeight(35),
+      margin: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
           color: Colors.black12,
@@ -128,11 +140,10 @@ class LoginPage extends StatelessWidget {
         ),
         color: ColorCustomer.blue,
         padding: EdgeInsets.only(top: 8),
-        minWidth: 600,
         elevation: 0,
-        height: 45,
+        // height: 45,
         onPressed: () {
-          Get.to(WorkshopsPage());
+          Get.to(WorkshopsPage(),);
         },
       ),
     );
