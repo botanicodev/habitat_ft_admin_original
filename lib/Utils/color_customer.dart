@@ -5,4 +5,5 @@ class ColorCustomer {
   static Color ligthBlue = Color(0xFF00B2DC);
   static Color ligthGrey = Color(0xFFF8F8F8);
   static Color textGrey = Color(0xFF969696);
+  static Color green = Color(0xFFA2D32A);
 }
