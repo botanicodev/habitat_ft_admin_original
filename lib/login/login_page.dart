@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
           width: ScreenUtil().setWidth(360),
           padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(30), horizontal: ScreenUtil().setWidth(20)),
           decoration: BoxDecoration(
-              color: ColorCustomer.ligthGrey,
+              color: ColorCustomer.grey,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -35,8 +35,6 @@ class LoginPage extends StatelessWidget {
               _buildHeader(),
               _buildLoginEmail(),
               _buildLoginButton(),
-              // _buildDivider(),
-              // _buildGoogleButton(),
             ],
           ),
         ),

@@ -19,7 +19,7 @@ void main() {
 class Init extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(width: 1366, height: 768, allowFontScaling: true);
+    ScreenUtil.init(context, width: 1366, height: 768, allowFontScaling: true);
 
     return ResponsiveScreen(
       phone: ErrorPage(),
