@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:get/route_manager.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
+import 'package:habitat_ft_admin/workshop/workshop.dart';
 
 class WorkshopsPage extends StatefulWidget {
   @override
@@ -48,9 +50,8 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor: ColorCustomer.ligthGrey,
+      backgroundColor: ColorCustomer.grey,
       appBar: AppBar(
         title: Image.asset('assets/icons/habitat_logo_w.png',
             width: ScreenUtil().setWidth(40)),
@@ -95,7 +96,7 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
-        backgroundColor: ColorCustomer.ligthGrey,
+        backgroundColor: ColorCustomer.grey,
         content: Container(
           width: 510,
           height: 400,
@@ -246,26 +247,31 @@ class WorkshopItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 600,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 30,
-              offset: Offset(5, 5),
-            )
-          ]),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        _buildAvatar(),
-        SizedBox(width: 20),
-        _buildText(),
-        _buildIcon(),
-      ]),
+    return GestureDetector(
+      child: Container(
+        width: 600,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding:
+            const EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 30,
+                offset: Offset(5, 5),
+              )
+            ]),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          _buildAvatar(),
+          SizedBox(width: 20),
+          _buildText(),
+          _buildIcon(),
+        ]),
+      ),
+      onTap: () => Get.to(Workshop()),
     );
   }
 
