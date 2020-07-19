@@ -5,19 +5,17 @@ import 'package:get/get.dart';
 import 'package:habitat_ft_admin/workshops/workshops_page.dart';
 
 class LoginPage extends StatelessWidget {
-
-
   const LoginPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-        
     return Scaffold(
       backgroundColor: ColorCustomer.blue,
       body: Center(
         child: Container(
-          width: ScreenUtil().setWidth(360),
-          padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(30), horizontal: ScreenUtil().setWidth(20)),
+          width: ScreenUtil().setWidth(354),
+          height: ScreenUtil().setHeight(383),
+          padding: EdgeInsets.only(top: ScreenUtil().setHeight(31)),
           decoration: BoxDecoration(
               color: ColorCustomer.grey,
               borderRadius: BorderRadius.circular(10),
@@ -51,18 +49,18 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildHeader() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(15)),
+      margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
       child: Column(children: [
         Text(
           '¡Bienvenido!',
           style: TextStyle(
             color: ColorCustomer.ligthBlue,
-            fontSize: ScreenUtil().setSp(35),
-            fontWeight: FontWeight.w300,
+            fontSize: ScreenUtil().setSp(30),
+            fontWeight: FontWeight.w100,
             letterSpacing: -1,
           ),
         ),
-        SizedBox(height: ScreenUtil().setHeight(20)),
+        SizedBox(height: ScreenUtil().setHeight(26)),
         Text(
           'Inicio de sesión',
           style: TextStyle(
@@ -78,10 +76,11 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildLoginEmail() {
     return Container(
+      margin: EdgeInsets.only(top: ScreenUtil().setHeight(25)),
       child: Column(children: [
         _buildTextFormField('Correo electrónico', Icons.email),
         SizedBox(
-          height: ScreenUtil().setWidth(20),
+          height: ScreenUtil().setHeight(27),
         ),
         _buildTextFormField('Contraseña', Icons.lock),
       ]),
@@ -90,15 +89,20 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildTextFormField(String text, IconData icon) {
     return Container(
-      width: ScreenUtil().setWidth(300),
-      height: ScreenUtil().setHeight(40),
+      width: ScreenUtil().setWidth(305),
+      height: ScreenUtil().setHeight(35),
       child: TextFormField(
           decoration: InputDecoration(
         suffixIcon: Icon(icon, size: ScreenUtil().setWidth(20)),
-        contentPadding:
-            const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15),
+        contentPadding: EdgeInsets.only(
+            top: ScreenUtil().setHeight(12),
+            left: ScreenUtil().setWidth(15),
+            right: ScreenUtil().setWidth(15)),
         hintText: text,
-        hintStyle: TextStyle(color: Colors.black38, letterSpacing: -1, fontSize: ScreenUtil().setSp(12)),
+        hintStyle: TextStyle(
+            color: Colors.black54,
+            letterSpacing: -1,
+            fontSize: ScreenUtil().setSp(12)),
         isCollapsed: true,
         fillColor: Colors.white,
         filled: true,
@@ -109,7 +113,7 @@ class LoginPage extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black12, width: 1),
+          borderSide: BorderSide(color: Colors.black54, width: 0),
         ),
       )),
     );
@@ -117,31 +121,27 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildLoginButton() {
     return Container(
-      width: ScreenUtil().setWidth(300),
+      width: ScreenUtil().setWidth(305),
       height: ScreenUtil().setHeight(35),
-      margin: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 10,
-          offset: Offset(5, 5),
-        )
-      ]),
+      margin: EdgeInsets.only(top: ScreenUtil().setHeight(27)),
       child: MaterialButton(
         child: Text(
           'Iniciar sesión',
           style: TextStyle(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: ScreenUtil().setSp(12),
               fontWeight: FontWeight.w500,
-              letterSpacing: -1),
+              letterSpacing: 0),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3),
         ),
         color: ColorCustomer.blue,
-        padding: EdgeInsets.only(top: 8),
-        elevation: 0,
-        // height: 45,
+        padding: EdgeInsets.only(top: 7),
         onPressed: () {
-          Get.to(WorkshopsPage(),);
+          Get.to(
+            WorkshopsPage(),
+          );
         },
       ),
     );
