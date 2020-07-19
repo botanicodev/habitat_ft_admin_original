@@ -57,6 +57,7 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
             width: ScreenUtil().setWidth(40)),
         backgroundColor: ColorCustomer.ligthBlue,
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Container(
