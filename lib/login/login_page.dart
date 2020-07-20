@@ -194,10 +194,10 @@ class __LoginState extends State<_Login> {
         color: ColorCustomer.blue,
         padding: EdgeInsets.only(top: 7),
         onPressed: () {
-          Get.to(WorkshopsPage());
-          // BlocProvider.of<AuthenticationBloc>(context).add(
-          //     AuthenticationStarted(
-          //         emailController.text, passwordController.text));
+          // Get.to(WorkshopsPage());
+          BlocProvider.of<AuthenticationBloc>(context).add(
+              AuthenticationStarted(
+                  emailController.text, passwordController.text));
         },
       ),
     );

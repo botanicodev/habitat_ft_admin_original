@@ -8,6 +8,7 @@ import 'package:habitat_ft_admin/Utils/color_customer.dart';
 import 'package:habitat_ft_admin/model/workshop_model.dart';
 import 'package:habitat_ft_admin/workshop/add_workshop_bloc.dart';
 import 'package:habitat_ft_admin/workshop/workshop_page.dart';
+import 'package:habitat_ft_admin/workshops/list_workshops_bloc.dart';
 
 class WorkshopsPage extends StatelessWidget {
   const WorkshopsPage({Key key}) : super(key: key);
@@ -15,7 +16,10 @@ class WorkshopsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider(create: (context) => AddWorkshopBloc(AddWorkshopInitial()))
+      BlocProvider(create: (context) => AddWorkshopBloc(AddWorkshopInitial())),
+      BlocProvider(
+          create: (context) => ListWorkshopBloc(ListWorkshopInitial())
+            ..add(ListWorkshopStarted())),
     ], child: _Worshops());
   }
 }
@@ -31,42 +35,6 @@ class __WorshopsState extends State<_Worshops> {
   final TextEditingController nameWorkshopController = TextEditingController();
   final TextEditingController descriptionWorkshopController =
       TextEditingController();
-
-  // List<WorkshopItem> workshops = [
-  //   WorkshopItem(
-  //       workshopName: 'Taller A',
-  //       objetive:
-  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-  //       colors: [Color(0xFF179994), Color(0xFFa9ed98)]),
-  //   WorkshopItem(
-  //       workshopName: 'Taller B',
-  //       objetive:
-  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-  //       colors: [Color(0xFFd668b0), Color(0xFFa675d9)]),
-  //   WorkshopItem(
-  //       workshopName: 'Taller C',
-  //       objetive:
-  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-  //       colors: [Color(0xFF92dac6), Color(0xFF37ace3)]),
-  //   WorkshopItem(
-  //       workshopName: 'Taller D',
-  //       objetive:
-  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-  //       colors: [Color(0xFFc9ed8c), Color(0xFFfb8f9d)]),
-  //   WorkshopItem(
-  //       workshopName: 'Taller E',
-  //       objetive:
-  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-  //       colors: [Color(0xFFf661a2), Color(0xFFffcf5f)]),
-  //   WorkshopItem(
-  //       workshopName: 'Taller F',
-  //       objetive:
-  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-  //       colors: [
-  //         Colors.primaries[Random().nextInt(Colors.primaries.length)],
-  //         Colors.primaries[Random().nextInt(Colors.primaries.length)]
-  //       ]),
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +59,16 @@ class __WorshopsState extends State<_Worshops> {
           child: Container(
             padding: EdgeInsets.all(45),
             width: double.infinity,
-            child: Column(
-              children: [
-                _buildTitle(),
-                // for (int i = 0; i < workshops.length; i++) workshops[i]
-              ],
-            ),
+            child: BlocBuilder<ListWorkshopBloc, ListWorkshopState>(
+                builder: (context, state) {
+              if (state is ListWorkshopSuccess) {
+                return Column(
+                  children: _buildListWorkshops(state.workshops),
+                );
+              } else {
+                return _buildTitle();
+              }
+            }),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -121,7 +93,26 @@ class __WorshopsState extends State<_Worshops> {
     );
   }
 
+  List<Widget> _buildListWorkshops(List<Workshop> workshops) {
+    List<Widget> widgets = List();
+    widgets.add(
+      _buildTitle(),
+    );
+    workshops.forEach((w) {
+      widgets.add(
+          WorkshopItem(workshopName: w.title, objetive: w.description, colors: [
+        Colors.primaries[Random().nextInt(Colors.primaries.length)],
+        Colors.primaries[Random().nextInt(Colors.primaries.length)]
+      ]));
+    });
+
+    return widgets;
+  }
+
   void _buildNewWorkshop(Bloc addWorkshopBloc) {
+    nameWorkshopController.text = '';
+    descriptionWorkshopController.text = '';
+
     showDialog(
       context: context,
       barrierDismissible: false,
