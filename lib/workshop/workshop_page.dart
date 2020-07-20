@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
 
-class Workshop extends StatelessWidget {
-  const Workshop({Key key}) : super(key: key);
+class WorkshopPage extends StatelessWidget {
+  const WorkshopPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

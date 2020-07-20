@@ -1,82 +1,111 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:get/route_manager.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
-import 'package:habitat_ft_admin/workshop/workshop.dart';
+import 'package:habitat_ft_admin/model/workshop_model.dart';
+import 'package:habitat_ft_admin/workshop/add_workshop_bloc.dart';
+import 'package:habitat_ft_admin/workshop/workshop_page.dart';
 
-class WorkshopsPage extends StatefulWidget {
-  @override
-  _WorkshopsPageState createState() => _WorkshopsPageState();
-}
-
-class _WorkshopsPageState extends State<WorkshopsPage> {
-  List<WorkshopItem> workshops = [
-    WorkshopItem(
-        workshopName: 'Taller A',
-        objetive:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-        colors: [Color(0xFF179994), Color(0xFFa9ed98)]),
-    WorkshopItem(
-        workshopName: 'Taller B',
-        objetive:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-        colors: [Color(0xFFd668b0), Color(0xFFa675d9)]),
-    WorkshopItem(
-        workshopName: 'Taller C',
-        objetive:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-        colors: [Color(0xFF92dac6), Color(0xFF37ace3)]),
-    WorkshopItem(
-        workshopName: 'Taller D',
-        objetive:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-        colors: [Color(0xFFc9ed8c), Color(0xFFfb8f9d)]),
-    WorkshopItem(
-        workshopName: 'Taller E',
-        objetive:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-        colors: [Color(0xFFf661a2), Color(0xFFffcf5f)]),
-    WorkshopItem(
-        workshopName: 'Taller F',
-        objetive:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
-        colors: [
-          Colors.primaries[Random().nextInt(Colors.primaries.length)],
-          Colors.primaries[Random().nextInt(Colors.primaries.length)]
-        ]),
-  ];
+class WorkshopsPage extends StatelessWidget {
+  const WorkshopsPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorCustomer.grey,
-      appBar: AppBar(
-        title: Image.asset('assets/icons/habitat_logo_w.png',
-            width: ScreenUtil().setWidth(40)),
-        backgroundColor: ColorCustomer.ligthBlue,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(45),
-          width: double.infinity,
-          child: Column(
-            children: [
-              _buildTitle(),
-              for (int i = 0; i < workshops.length; i++) workshops[i]
-            ],
+    return MultiBlocProvider(providers: [
+      BlocProvider(create: (context) => AddWorkshopBloc(AddWorkshopInitial()))
+    ], child: _Worshops());
+  }
+}
+
+class _Worshops extends StatefulWidget {
+  _Worshops({Key key}) : super(key: key);
+
+  @override
+  __WorshopsState createState() => __WorshopsState();
+}
+
+class __WorshopsState extends State<_Worshops> {
+  final TextEditingController nameWorkshopController = TextEditingController();
+  final TextEditingController descriptionWorkshopController =
+      TextEditingController();
+
+  // List<WorkshopItem> workshops = [
+  //   WorkshopItem(
+  //       workshopName: 'Taller A',
+  //       objetive:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
+  //       colors: [Color(0xFF179994), Color(0xFFa9ed98)]),
+  //   WorkshopItem(
+  //       workshopName: 'Taller B',
+  //       objetive:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
+  //       colors: [Color(0xFFd668b0), Color(0xFFa675d9)]),
+  //   WorkshopItem(
+  //       workshopName: 'Taller C',
+  //       objetive:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
+  //       colors: [Color(0xFF92dac6), Color(0xFF37ace3)]),
+  //   WorkshopItem(
+  //       workshopName: 'Taller D',
+  //       objetive:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
+  //       colors: [Color(0xFFc9ed8c), Color(0xFFfb8f9d)]),
+  //   WorkshopItem(
+  //       workshopName: 'Taller E',
+  //       objetive:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
+  //       colors: [Color(0xFFf661a2), Color(0xFFffcf5f)]),
+  //   WorkshopItem(
+  //       workshopName: 'Taller F',
+  //       objetive:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed...',
+  //       colors: [
+  //         Colors.primaries[Random().nextInt(Colors.primaries.length)],
+  //         Colors.primaries[Random().nextInt(Colors.primaries.length)]
+  //       ]),
+  // ];
+
+  @override
+  Widget build(BuildContext context) {
+    final Bloc addWorkshopBloc = BlocProvider.of<AddWorkshopBloc>(context);
+
+    return BlocListener<AddWorkshopBloc, AddWorkshopState>(
+      listener: (context, state) {
+        if (state is AddWorkshopSuccess) {
+          Get.back();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: ColorCustomer.grey,
+        appBar: AppBar(
+          title: Image.asset('assets/icons/habitat_logo_w.png',
+              width: ScreenUtil().setWidth(40)),
+          backgroundColor: ColorCustomer.ligthBlue,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(45),
+            width: double.infinity,
+            child: Column(
+              children: [
+                _buildTitle(),
+                // for (int i = 0; i < workshops.length; i++) workshops[i]
+              ],
+            ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.add,
+            ),
+            backgroundColor: ColorCustomer.blue,
+            onPressed: () => _buildNewWorkshop(addWorkshopBloc)),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-          ),
-          backgroundColor: ColorCustomer.blue,
-          onPressed: () => _buildNewWorkshop()),
     );
   }
 
@@ -92,9 +121,10 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
     );
   }
 
-  void _buildNewWorkshop() {
+  void _buildNewWorkshop(Bloc addWorkshopBloc) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         backgroundColor: ColorCustomer.grey,
@@ -138,6 +168,7 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
                         height: 15,
                       ),
                       TextFormField(
+                        controller: nameWorkshopController,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.only(
                               top: 11, bottom: 7, left: 15, right: 15),
@@ -165,6 +196,7 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
                         height: 15,
                       ),
                       TextFormField(
+                        controller: descriptionWorkshopController,
                         keyboardType: TextInputType.multiline,
                         maxLines: 10,
                         decoration: InputDecoration(
@@ -195,7 +227,7 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
                       ),
                       Row(children: [
                         FlatButton(
-                          onPressed: () {},
+                          onPressed: () => Get.back(),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(3),
                           ),
@@ -210,7 +242,12 @@ class _WorkshopsPageState extends State<WorkshopsPage> {
                         ),
                         SizedBox(width: 18),
                         FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            addWorkshopBloc.add(AddWorkshopStarted(Workshop(
+                                title: nameWorkshopController.text,
+                                description:
+                                    descriptionWorkshopController.text)));
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(3),
                           ),
@@ -272,7 +309,7 @@ class WorkshopItem extends StatelessWidget {
           _buildIcon(),
         ]),
       ),
-      onTap: () => Get.to(Workshop()),
+      onTap: () => Get.to(WorkshopPage()),
     );
   }
 
