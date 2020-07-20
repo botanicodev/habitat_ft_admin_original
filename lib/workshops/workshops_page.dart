@@ -16,7 +16,7 @@ class WorkshopsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider(create: (context) => AddWorkshopBloc(AddWorkshopInitial())),
+      BlocProvider(create: (context) => AddWorkshopBloc()),
       BlocProvider(
           create: (context) => ListWorkshopBloc(ListWorkshopInitial())
             ..add(ListWorkshopStarted())),
@@ -66,7 +66,12 @@ class __WorshopsState extends State<_Worshops> {
                   children: _buildListWorkshops(state.workshops),
                 );
               } else {
-                return _buildTitle();
+                return Column(
+                  children: [
+                    _buildTitle(),
+                    Center(child: CircularProgressIndicator())
+                  ],
+                );
               }
             }),
           ),
@@ -99,11 +104,14 @@ class __WorshopsState extends State<_Worshops> {
       _buildTitle(),
     );
     workshops.forEach((w) {
-      widgets.add(
-          WorkshopItem(workshopName: w.title, objetive: w.description, colors: [
-        Colors.primaries[Random().nextInt(Colors.primaries.length)],
-        Colors.primaries[Random().nextInt(Colors.primaries.length)]
-      ]));
+      widgets.add(WorkshopItem(
+          id: w.id,
+          title: w.title,
+          description: w.description,
+          colors: [
+            Colors.primaries[Random().nextInt(Colors.primaries.length)],
+            Colors.primaries[Random().nextInt(Colors.primaries.length)]
+          ]));
     });
 
     return widgets;
@@ -263,14 +271,16 @@ class __WorshopsState extends State<_Worshops> {
 }
 
 class WorkshopItem extends StatelessWidget {
-  final String workshopName;
-  final String objetive;
+  final String id;
+  final String title;
+  final String description;
   final List<Color> colors;
 
   const WorkshopItem(
       {Key key,
-      @required this.workshopName,
-      @required this.objetive,
+      @required this.id,
+      @required this.title,
+      @required this.description,
       @required this.colors})
       : super(key: key);
 
@@ -300,7 +310,9 @@ class WorkshopItem extends StatelessWidget {
           _buildIcon(),
         ]),
       ),
-      onTap: () => Get.to(WorkshopPage()),
+      onTap: () => Get.to(WorkshopPage(
+        workshop: Workshop(id: id, title: title, description: description),
+      )),
     );
   }
 
@@ -323,7 +335,7 @@ class WorkshopItem extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(height: 7),
         Text(
-          this.workshopName,
+          this.title,
           style: TextStyle(
               color: ColorCustomer.ligthBlue,
               fontSize: 19,
@@ -331,7 +343,7 @@ class WorkshopItem extends StatelessWidget {
               letterSpacing: 0),
         ),
         SizedBox(height: 5),
-        Text(this.objetive,
+        Text(this.description,
             style: TextStyle(color: Colors.black38, letterSpacing: -1))
       ]),
     );

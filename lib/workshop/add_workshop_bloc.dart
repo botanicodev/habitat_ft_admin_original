@@ -9,10 +9,7 @@ class AddWorkshopBloc extends Bloc<AddWorkshopEvent, AddWorkshopState> {
   final WorkshopRepository _workshopRepository = WorkshopRepository();
   StreamSubscription _workshopSubscription;
 
-  AddWorkshopBloc(AddWorkshopState initialState) : super(initialState);
-
-  // @override
-  // AddWorkshopState get initialState => AddWorkshopInitial();
+  AddWorkshopBloc() : super(null);
 
   @override
   Stream<AddWorkshopState> mapEventToState(
