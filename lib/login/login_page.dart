@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
 import 'package:habitat_ft_admin/login/authentication_bloc.dart';
-import 'package:habitat_ft_admin/login/user_repository.dart';
+import 'package:habitat_ft_admin/repository/user_repository.dart';
 import 'package:habitat_ft_admin/workshops/workshops_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -194,9 +194,10 @@ class __LoginState extends State<_Login> {
         color: ColorCustomer.blue,
         padding: EdgeInsets.only(top: 7),
         onPressed: () {
-          BlocProvider.of<AuthenticationBloc>(context).add(
-              AuthenticationStarted(
-                  emailController.text, passwordController.text));
+          Get.to(WorkshopsPage());
+          // BlocProvider.of<AuthenticationBloc>(context).add(
+          //     AuthenticationStarted(
+          //         emailController.text, passwordController.text));
         },
       ),
     );
