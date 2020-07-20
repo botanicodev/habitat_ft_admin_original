@@ -1,11 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
+import 'package:habitat_ft_admin/model/moment_model.dart';
+import 'package:habitat_ft_admin/model/workshop_model.dart';
+
+import 'list_moment_bloc.dart';
 
 class WorkshopPage extends StatelessWidget {
-  const WorkshopPage({Key key}) : super(key: key);
+  final Workshop workshop;
 
+  const WorkshopPage({Key key, @required this.workshop}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<ListMomentBloc>(
+              create: (context) =>
+                  ListMomentBloc(workshop.id)..add(ListMomentStarted())),
+        ],
+        child: _Workshop(
+          workshop: workshop,
+        ));
+  }
+}
+
+class _Workshop extends StatefulWidget {
+  final Workshop workshop;
+  const _Workshop({Key key, @required this.workshop}) : super(key: key);
+
+  @override
+  __WorkshopState createState() => __WorkshopState();
+}
+
+class __WorkshopState extends State<_Workshop> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 1366, height: 768, allowFontScaling: true);
@@ -22,11 +52,29 @@ class WorkshopPage extends StatelessWidget {
           width: double.infinity,
           child: Column(
             children: [
-              _buildTitle(),
-              _buildObjective(),
-              _buildHeaderMoments(),
-              Moment(),
-              Moment(),
+              Column(
+                children: [
+                  _buildTitle(),
+                  _buildDescription(),
+                  _buildHeaderMoments(),
+                ],
+              ),
+              BlocBuilder<ListMomentBloc, ListMomentState>(
+                builder: (context, state) {
+                  if (state is ListMomentInProcess) {
+                    return Container(
+                        margin:
+                            EdgeInsets.only(top: ScreenUtil().setHeight(20)),
+                        child: CircularProgressIndicator());
+                  } else if (state is ListMomentSuccess) {
+                    return Column(
+                      children: _listMoments(state.moments),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              )
             ],
           ),
         ),
@@ -38,7 +86,7 @@ class WorkshopPage extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(
           top: ScreenUtil().setWidth(40), bottom: ScreenUtil().setWidth(20)),
-      child: Text('Taller A',
+      child: Text(widget.workshop.title,
           style: TextStyle(
               fontSize: ScreenUtil().setSp(22.58),
               color: ColorCustomer.blue,
@@ -46,13 +94,13 @@ class WorkshopPage extends StatelessWidget {
     );
   }
 
-  Widget _buildObjective() {
+  Widget _buildDescription() {
     return Container(
       width: ScreenUtil().setWidth(505),
       child: Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed ullamcorper nisl. Mauris at volutpat nisi. Curabitur at porta nulla. Proin tincidunt rutrum tincidunt. Nullam molestie tellus eu dui feugiat accumsan et sit amet erat. Curabitur pellentesque consequat nisi, sed ullamcorper risus viverra et. Phasellus ut eleifend dui.',
+        widget.workshop.description,
         style: TextStyle(
-            fontSize: ScreenUtil().setSp(7.52), color: ColorCustomer.textGrey),
+            fontSize: ScreenUtil().setSp(13), color: ColorCustomer.textGrey),
       ),
     );
   }
@@ -127,16 +175,27 @@ class WorkshopPage extends StatelessWidget {
       ),
     );
   }
+
+  List<Widget> _listMoments(List<Moment> moments) {
+    print(moments);
+    return moments
+        .map((m) => MomentContainer(
+              moment: m,
+            ))
+        .toList();
+  }
 }
 
-class Moment extends StatefulWidget {
-  const Moment({Key key}) : super(key: key);
+class MomentContainer extends StatefulWidget {
+  final Moment moment;
+
+  const MomentContainer({Key key, @required this.moment}) : super(key: key);
 
   @override
-  _MomentState createState() => _MomentState();
+  _MomentContainerState createState() => _MomentContainerState();
 }
 
-class _MomentState extends State<Moment> {
+class _MomentContainerState extends State<MomentContainer> {
   final pageController = PageController(initialPage: 0);
 
   @override
@@ -1356,7 +1415,6 @@ class LoadedComponent extends StatelessWidget {
           ],
         ));
   }
-
 }
 
 class MomentItem extends StatelessWidget {
