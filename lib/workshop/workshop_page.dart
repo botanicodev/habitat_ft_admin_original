@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
 import 'package:habitat_ft_admin/model/moment_model.dart';
 import 'package:habitat_ft_admin/model/workshop_model.dart';
+import 'package:habitat_ft_admin/workshop/list_component_bloc.dart';
+import 'package:habitat_ft_admin/workshop/select_component_bloc.dart';
 
 import 'list_moment_bloc.dart';
 
@@ -36,6 +40,8 @@ class _Workshop extends StatefulWidget {
 }
 
 class __WorkshopState extends State<_Workshop> {
+  bool isCollapsed = true;
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 1366, height: 768, allowFontScaling: true);
@@ -68,7 +74,7 @@ class __WorkshopState extends State<_Workshop> {
                         child: CircularProgressIndicator());
                   } else if (state is ListMomentSuccess) {
                     return Column(
-                      children: _listMoments(state.moments),
+                      children: _listMoments(state.moments, widget.workshop.id),
                     );
                   } else {
                     return Container();
@@ -115,10 +121,17 @@ class __WorkshopState extends State<_Workshop> {
           'Momentos',
           style: TextStyle(fontSize: ScreenUtil().setSp(18)),
         ),
-        Icon(
-          Icons.add,
-          color: ColorCustomer.blue,
-          size: ScreenUtil().setWidth(25),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isCollapsed = false;
+            });
+          },
+          child: Icon(
+            Icons.add,
+            color: ColorCustomer.blue,
+            size: ScreenUtil().setWidth(25),
+          ),
         ),
         _buildInputNewMoment(),
       ]),
@@ -126,91 +139,130 @@ class __WorkshopState extends State<_Workshop> {
   }
 
   Widget _buildInputNewMoment() {
-    return Container(
-      width: ScreenUtil().setWidth(348),
-      height: ScreenUtil().setHeight(38),
-      padding: EdgeInsets.only(bottom: 7, left: 10, right: 20),
-      decoration: BoxDecoration(
-        border: Border.all(color: ColorCustomer.ligthBlue),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        children: [
-          Flexible(
-            child: TextField(
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+    return AnimatedOpacity(
+      duration: Duration(milliseconds: 500),
+      opacity: isCollapsed ? 0 : 1,
+      child: Container(
+        width: ScreenUtil().setWidth(348),
+        height: ScreenUtil().setHeight(38),
+        padding: EdgeInsets.only(bottom: 7, left: 10, right: 20),
+        decoration: BoxDecoration(
+          border: Border.all(color: ColorCustomer.ligthBlue),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          children: [
+            Flexible(
+              child: TextField(
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: ScreenUtil().setWidth(70),
-          ),
-          GestureDetector(
+            SizedBox(
+              width: ScreenUtil().setWidth(70),
+            ),
+            GestureDetector(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: ScreenUtil().setHeight(6),
+                      right: ScreenUtil().setWidth(15)),
+                  child: Image.asset(
+                    'assets/icons/habitat_icono_no.png',
+                    width: 15,
+                    height: 15,
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    isCollapsed = true;
+                  });
+                }),
+            GestureDetector(
               child: Padding(
-                padding: EdgeInsets.only(
-                    top: ScreenUtil().setHeight(6),
-                    right: ScreenUtil().setWidth(15)),
+                padding: EdgeInsets.only(top: ScreenUtil().setHeight(6)),
                 child: Image.asset(
-                  'assets/icons/habitat_icono_no.png',
-                  width: 15,
+                  'assets/icons/habitat_icono_ok.png',
+                  width: 19,
                   height: 15,
                 ),
               ),
-              onTap: () {}),
-          GestureDetector(
-            child: Padding(
-              padding: EdgeInsets.only(top: ScreenUtil().setHeight(6)),
-              child: Image.asset(
-                'assets/icons/habitat_icono_ok.png',
-                width: 19,
-                height: 15,
-              ),
-            ),
-            onTap: () {},
-          )
-        ],
+              onTap: () {
+                setState(() {
+                  isCollapsed = true;
+                });
+              },
+            )
+          ],
+        ),
       ),
     );
   }
 
-  List<Widget> _listMoments(List<Moment> moments) {
+  List<Widget> _listMoments(List<Moment> moments, String workshopId) {
     print(moments);
     return moments
         .map((m) => MomentContainer(
               moment: m,
+              workshopId: workshopId,
             ))
         .toList();
   }
 }
 
-class MomentContainer extends StatefulWidget {
+class MomentContainer extends StatelessWidget {
   final Moment moment;
-
-  const MomentContainer({Key key, @required this.moment}) : super(key: key);
+  final String workshopId;
+  const MomentContainer(
+      {Key key, @required this.moment, @required this.workshopId})
+      : super(key: key);
 
   @override
-  _MomentContainerState createState() => _MomentContainerState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<ListComponentBloc>(
+              create: (context) => ListComponentBloc(workshopId, moment.id)),
+          BlocProvider<SelectComponentBloc>(
+              create: (context) => SelectComponentBloc()),
+        ],
+        child: _Moment(
+          moment: moment,
+        ));
+  }
 }
 
-class _MomentContainerState extends State<MomentContainer> {
+class _Moment extends StatefulWidget {
+  final Moment moment;
+
+  const _Moment({Key key, @required this.moment}) : super(key: key);
+
+  @override
+  _MomentState createState() => _MomentState();
+}
+
+class _MomentState extends State<_Moment> {
   final pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
+    final Bloc selectComponentBloc =
+        BlocProvider.of<SelectComponentBloc>(context);
+
     return Container(
       width: ScreenUtil().setWidth(505),
       margin: EdgeInsets.only(top: ScreenUtil().setWidth(20)),
       child: Column(children: [
-        _buildHeader(context),
+        _buildHeader(context, widget.moment.title, selectComponentBloc),
         _buildBody(),
       ]),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(
+      BuildContext context, String title, Bloc selectComponentBloc) {
     return Container(
       height: ScreenUtil().setHeight(53),
       padding: EdgeInsets.only(
@@ -233,13 +285,13 @@ class _MomentContainerState extends State<MomentContainer> {
       child: Row(children: [
         Container(
             margin: EdgeInsets.only(top: 7),
-            child: Text('Bienvenida',
+            child: Text(title,
                 style: TextStyle(
                     color: Colors.white, fontSize: ScreenUtil().setSp(17)))),
         Spacer(),
         IconButton(
           icon: Icon(Icons.add, color: Colors.white, size: 28),
-          onPressed: () => _buildNewComponent(context),
+          onPressed: () => _buildNewComponent(context, selectComponentBloc),
         ),
         Icon(
           Icons.keyboard_arrow_down,
@@ -267,17 +319,17 @@ class _MomentContainerState extends State<MomentContainer> {
       ),
       child: Column(
         children: [
-          MomentItem(
+          ComponentItem(
             title: '¡Hola!',
             backgroundColor: Colors.white,
             imageIcon: 'assets/icons/habitat_icon_video.png',
           ),
-          MomentItem(
+          ComponentItem(
             title: '¿Qué ven acá?',
             backgroundColor: Colors.black12,
             imageIcon: 'assets/icons/habitat_icon_imagen.png',
           ),
-          MomentItem(
+          ComponentItem(
             title: 'Manos a la obra',
             backgroundColor: Colors.white,
             imageIcon: 'assets/icons/habitat_icon_documento.png',
@@ -288,9 +340,15 @@ class _MomentContainerState extends State<MomentContainer> {
     );
   }
 
-  void _buildNewComponent(BuildContext context) {
+  // List<Widget> _listComponent(List<Component> components){
+
+  //   return components.map((c) => ).toList();
+  // }
+
+  void _buildNewComponent(BuildContext context, Bloc selectComponentBloc) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         backgroundColor: ColorCustomer.grey,
@@ -304,10 +362,12 @@ class _MomentContainerState extends State<MomentContainer> {
             children: [
               SelectedComponent(
                 pageController: pageController,
+                bloc: selectComponentBloc,
               ),
-              AddAudio(
-                pageController: pageController,
-              ),
+              AddVideo(pageController: pageController),
+              AddImage(pageController: pageController),
+              AddDocument(pageController: pageController),
+              AddAudio(pageController: pageController),
               LoadedComponent()
             ],
           ),
@@ -319,8 +379,10 @@ class _MomentContainerState extends State<MomentContainer> {
 
 class SelectedComponent extends StatelessWidget {
   final PageController pageController;
+  final Bloc bloc;
 
-  const SelectedComponent({Key key, @required this.pageController})
+  const SelectedComponent(
+      {Key key, @required this.pageController, @required this.bloc})
       : super(key: key);
 
   @override
@@ -450,9 +512,20 @@ class SelectedComponent extends StatelessWidget {
         ),
       ),
       onTap: () {
+        int offset = 0;
+        if (type == 'Video') {
+          offset = 1;
+        } else if (type == 'Imagen') {
+          offset = 2;
+        } else if (type == 'Documento') {
+          offset = 3;
+        } else {
+          offset = 4;
+        }
+
         pageController
-          ..animateToPage(1,
-              duration: Duration(milliseconds: 500), curve: Curves.ease);
+          ..animateToPage(offset,
+              duration: Duration(milliseconds: 300), curve: Curves.bounceOut);
       },
     );
   }
@@ -606,7 +679,7 @@ class AddVideo extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black54, width: 0),
+          borderSide: BorderSide(color: Colors.black54, width: 1),
         ),
       )),
     );
@@ -619,7 +692,7 @@ class AddVideo extends StatelessWidget {
       margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
       decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.black54, width: 0),
+          border: Border.all(color: Colors.black54, width: 1),
           borderRadius: BorderRadius.circular(3)),
     );
   }
@@ -631,12 +704,16 @@ class AddVideo extends StatelessWidget {
       margin: EdgeInsets.only(top: ScreenUtil().setHeight(18)),
       child: MaterialButton(
         color: ColorCustomer.blue,
-        child: Text('Cargar',
+        child: Text('Crear Componente',
             style: TextStyle(
                 color: Colors.white,
                 fontSize: ScreenUtil().setSp(12),
                 fontWeight: FontWeight.w500)),
-        onPressed: () {},
+        onPressed: () {
+          pageController
+            ..animateToPage(5,
+                duration: Duration(milliseconds: 300), curve: Curves.bounceOut);
+        },
       ),
     );
   }
@@ -790,7 +867,7 @@ class AddImage extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black54, width: 0),
+          borderSide: BorderSide(color: Colors.black54, width: 1),
         ),
       )),
     );
@@ -808,7 +885,7 @@ class AddImage extends StatelessWidget {
             margin: EdgeInsets.only(right: ScreenUtil().setWidth(14)),
             decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black54, width: 0),
+                border: Border.all(color: Colors.black54, width: 1),
                 borderRadius: BorderRadius.circular(3)),
           ),
           Container(
@@ -824,7 +901,9 @@ class AddImage extends StatelessWidget {
                           color: Colors.white,
                           fontSize: ScreenUtil().setSp(12),
                           fontWeight: FontWeight.w500)),
-                  onPressed: () {})),
+                  onPressed: () {
+                    _uploadImage();
+                  })),
         ],
       ),
     );
@@ -837,7 +916,7 @@ class AddImage extends StatelessWidget {
       margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
       decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.black54, width: 0),
+          border: Border.all(color: Colors.black54, width: 1),
           borderRadius: BorderRadius.circular(3)),
     );
   }
@@ -857,7 +936,11 @@ class AddImage extends StatelessWidget {
                 color: Colors.white,
                 fontSize: ScreenUtil().setSp(12),
                 fontWeight: FontWeight.w500)),
-        onPressed: () {},
+        onPressed: () {
+          pageController
+            ..animateToPage(5,
+                duration: Duration(milliseconds: 300), curve: Curves.bounceOut);
+        },
       ),
     );
   }
@@ -892,6 +975,35 @@ class AddImage extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void _uploadImage() {
+    final accept = 'image/*';
+
+    InputElement uploadInput = FileUploadInputElement();
+    uploadInput.multiple = false;
+    uploadInput.accept = accept;
+    uploadInput.click();
+
+    uploadInput.onChange.listen(
+      (changeEvent) {
+        final file = uploadInput.files.first;
+
+        final reader = FileReader();
+
+        reader.readAsDataUrl(file);
+        reader.onLoadEnd.listen(
+          (_) async {
+            // final url = await _uploadImageToStorage(file);
+
+            // setState(() {
+            //   _urlImage = url.toString();
+            //   _isImageLoading = false;
+            // });
+          },
+        );
+      },
     );
   }
 }
@@ -1029,7 +1141,7 @@ class AddDocument extends StatelessWidget {
             margin: EdgeInsets.only(right: ScreenUtil().setWidth(14)),
             decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black54, width: 0),
+                border: Border.all(color: Colors.black54, width: 1),
                 borderRadius: BorderRadius.circular(3)),
           ),
           Container(
@@ -1045,7 +1157,9 @@ class AddDocument extends StatelessWidget {
                           color: Colors.white,
                           fontSize: ScreenUtil().setSp(12),
                           fontWeight: FontWeight.w500)),
-                  onPressed: () {})),
+                  onPressed: () {
+                    _uploadImage();
+                  })),
         ],
       ),
     );
@@ -1058,7 +1172,7 @@ class AddDocument extends StatelessWidget {
       margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
       decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.black54, width: 0),
+          border: Border.all(color: Colors.black54, width: 1),
           borderRadius: BorderRadius.circular(3)),
     );
   }
@@ -1078,7 +1192,11 @@ class AddDocument extends StatelessWidget {
                 color: Colors.white,
                 fontSize: ScreenUtil().setSp(12),
                 fontWeight: FontWeight.w500)),
-        onPressed: () {},
+        onPressed: () {
+          pageController
+            ..animateToPage(5,
+                duration: Duration(milliseconds: 300), curve: Curves.bounceOut);
+        },
       ),
     );
   }
@@ -1113,6 +1231,35 @@ class AddDocument extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void _uploadImage() {
+    final accept = 'image/*';
+
+    InputElement uploadInput = FileUploadInputElement();
+    uploadInput.multiple = false;
+    uploadInput.accept = accept;
+    uploadInput.click();
+
+    uploadInput.onChange.listen(
+      (changeEvent) {
+        final file = uploadInput.files.first;
+
+        final reader = FileReader();
+
+        reader.readAsDataUrl(file);
+        reader.onLoadEnd.listen(
+          (_) async {
+            // final url = await _uploadImageToStorage(file);
+
+            // setState(() {
+            //   _urlImage = url.toString();
+            //   _isImageLoading = false;
+            // });
+          },
+        );
+      },
     );
   }
 }
@@ -1232,7 +1379,7 @@ class AddAudio extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black54, width: 0),
+          borderSide: BorderSide(color: Colors.black54, width: 1),
         ),
       )),
     );
@@ -1250,7 +1397,7 @@ class AddAudio extends StatelessWidget {
             margin: EdgeInsets.only(right: ScreenUtil().setWidth(14)),
             decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black54, width: 0),
+                border: Border.all(color: Colors.black54, width: 1),
                 borderRadius: BorderRadius.circular(3)),
           ),
           Container(
@@ -1266,7 +1413,9 @@ class AddAudio extends StatelessWidget {
                           color: Colors.white,
                           fontSize: ScreenUtil().setSp(12),
                           fontWeight: FontWeight.w500)),
-                  onPressed: () {})),
+                  onPressed: () {
+                    _uploadImage();
+                  })),
         ],
       ),
     );
@@ -1279,7 +1428,7 @@ class AddAudio extends StatelessWidget {
       margin: EdgeInsets.only(top: ScreenUtil().setHeight(15)),
       decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.black54, width: 0),
+          border: Border.all(color: Colors.black54, width: 1),
           borderRadius: BorderRadius.circular(3)),
     );
   }
@@ -1300,8 +1449,9 @@ class AddAudio extends StatelessWidget {
                 fontSize: ScreenUtil().setSp(12),
                 fontWeight: FontWeight.w500)),
         onPressed: () {
-          pageController.animateToPage(2,
-              duration: Duration(milliseconds: 500), curve: Curves.ease);
+          pageController
+            ..animateToPage(5,
+                duration: Duration(milliseconds: 300), curve: Curves.bounceOut);
         },
       ),
     );
@@ -1337,6 +1487,35 @@ class AddAudio extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void _uploadImage() {
+    final accept = 'image/*';
+
+    InputElement uploadInput = FileUploadInputElement();
+    uploadInput.multiple = false;
+    uploadInput.accept = accept;
+    uploadInput.click();
+
+    uploadInput.onChange.listen(
+      (changeEvent) {
+        final file = uploadInput.files.first;
+
+        final reader = FileReader();
+
+        reader.readAsDataUrl(file);
+        reader.onLoadEnd.listen(
+          (_) async {
+            // final url = await _uploadImageToStorage(file);
+
+            // setState(() {
+            //   _urlImage = url.toString();
+            //   _isImageLoading = false;
+            // });
+          },
+        );
+      },
     );
   }
 }
@@ -1417,12 +1596,12 @@ class LoadedComponent extends StatelessWidget {
   }
 }
 
-class MomentItem extends StatelessWidget {
+class ComponentItem extends StatelessWidget {
   final title;
   final backgroundColor;
   final imageIcon;
   final isLastItem;
-  const MomentItem(
+  const ComponentItem(
       {Key key,
       @required this.backgroundColor,
       this.isLastItem = false,
