@@ -138,9 +138,10 @@ class __WorshopsState extends State<_Worshops> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [Color(0xFF92dac6), Color(0xFF37ace3)]),
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Color(0xFF92dac6), Color(0xFF37ace3)],
+                ),
               ),
             ),
             Container(
@@ -323,9 +324,10 @@ class WorkshopItem extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: this.colors),
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: this.colors,
+        ),
       ),
     );
   }

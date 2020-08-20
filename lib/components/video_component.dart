@@ -3,11 +3,19 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:get/get.dart';
 import 'package:habitat_ft_admin/Utils/color_customer.dart';
 
-class VideoComponent extends StatelessWidget {
+class VideoComponent extends StatefulWidget {
   final PageController pageController;
 
   const VideoComponent({Key key, @required this.pageController})
       : super(key: key);
+
+  @override
+  _VideoComponentState createState() => _VideoComponentState();
+}
+
+class _VideoComponentState extends State<VideoComponent> {
+  final TextEditingController nameCtrl = TextEditingController();
+  final TextEditingController urlCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +27,11 @@ class VideoComponent extends StatelessWidget {
           SizedBox(
             height: ScreenUtil().setHeight(24),
           ),
-          _buildTextFormField("Nombre del componente"),
+          _buildTextFormField("Nombre del componente", nameCtrl),
           SizedBox(
             height: ScreenUtil().setHeight(15),
           ),
-          _buildTextFormField("Link del video"),
+          _buildTextFormField("Link del video", urlCtrl),
           _buildPreview(),
           _buildLoadButton(),
           _buildPageIndicator(2),
@@ -48,7 +56,7 @@ class VideoComponent extends StatelessWidget {
               size: ScreenUtil().setWidth(25),
             ),
             onTap: () {
-              pageController
+              widget.pageController
                 ..animateToPage(0,
                     duration: Duration(milliseconds: 500), curve: Curves.ease);
             },
@@ -96,32 +104,34 @@ class VideoComponent extends StatelessWidget {
         ));
   }
 
-  Widget _buildTextFormField(String text) {
+  Widget _buildTextFormField(String text, TextEditingController controller) {
     return Container(
       width: ScreenUtil().setWidth(348),
       height: ScreenUtil().setHeight(40),
       child: TextFormField(
-          decoration: InputDecoration(
-        contentPadding:
-            const EdgeInsets.only(top: 11, bottom: 10, left: 15, right: 15),
-        hintText: text,
-        hintStyle: TextStyle(
-            color: Colors.black54,
-            letterSpacing: -1,
-            fontSize: ScreenUtil().setSp(13)),
-        isCollapsed: true,
-        fillColor: Colors.white,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: ColorCustomer.blue,
-            width: 1.5,
+        controller: controller,
+        decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.only(top: 11, bottom: 10, left: 15, right: 15),
+          hintText: text,
+          hintStyle: TextStyle(
+              color: Colors.black54,
+              letterSpacing: -1,
+              fontSize: ScreenUtil().setSp(13)),
+          isCollapsed: true,
+          fillColor: Colors.white,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: ColorCustomer.blue,
+              width: 1.5,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black54, width: 1),
           ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black54, width: 1),
-        ),
-      )),
+      ),
     );
   }
 
@@ -150,9 +160,9 @@ class VideoComponent extends StatelessWidget {
                 fontSize: ScreenUtil().setSp(12),
                 fontWeight: FontWeight.w500)),
         onPressed: () {
-          pageController
-            ..animateToPage(2,
-                duration: Duration(milliseconds: 700), curve: Curves.ease);
+          // widget.pageController
+          //   ..animateToPage(2,
+          //       duration: Duration(milliseconds: 700), curve: Curves.ease);
         },
       ),
     );
