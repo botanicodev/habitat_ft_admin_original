@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habitat_ft_admin/Utils/error_screen.dart';
 import 'package:habitat_ft_admin/Utils/responsive_screen.dart';
-import 'package:habitat_ft_admin/login/login_page.dart';
+import 'package:habitat_ft_admin/page/login_page.dart';
 import 'package:habitat_ft_admin/workshop/select_component_bloc.dart';
 
 void main() {
